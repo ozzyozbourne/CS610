@@ -1,7 +1,22 @@
     1 #include <stdlib.h>
-    2 main(){
-    3     int sum = 0;
-    4     int i;
-    5     for(i = 1; i <= 100; i++) sum = sum + i;
-    6     cout << "the sum is -> " << sum << ENDL;
-    7 }
+    2 
+    3 int normal_summation(int);
+    4 int gauss_summation(int);
+    5 
+    6 main(void){
+    7     /* const int res1 = normal_summation(100); */ 
+    8     const int res2 = gauss_summation(100); 
+    9     /* cout << "The sum upto 100 using normal method is -> " << res1 << ENDL; */
+   10     cout << "The sum upto 100 using gauss method is -> " << res2 << ENDL;
+   11 }
+   12 
+   13 int normal_summation(const int number){
+   14     int sum = 0, iter = 1;
+   15     for(; iter <= number; iter++) sum = sum + iter;
+   16     return sum;
+   17 }
+   18 
+   19 int gauss_summation(const int number){
+   20     return ((number + 1) * number ) / 2;
+   21 }
+   22 
