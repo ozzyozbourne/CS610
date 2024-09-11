@@ -1,0 +1,7 @@
+    1 #include <stdlib.h>
+    2 main(){
+    3     int sum = 0;
+    4     int i;
+    5     for(i = 1; i <= 100; i++) sum = sum + i;
+    6     cout << "the sum is -> " << sum << ENDL;
+    7 }
