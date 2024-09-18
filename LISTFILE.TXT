@@ -3,16 +3,20 @@
     3 float factorial(int);
     4 
     5 main(void) {
-    6     int number;
-    7     cout << "Enter a number" << ENDL;
-    8     cin >> number;
-    9     cout << "The factorial is -> " << factorial(number) <<ENDL;
-   10 }
-   11 
-   12 float factorial(const int number){
-   13     int i = 1;
-   14     float res = 1.0;
-   15     for(; i <= number; i++ ) res = res * i;
-   16     return res;
-   17 }
-   18 
+    6     cout.precision(10);
+    7     int number;  
+    8     
+    9     cout << "Enter a positive number to find factorial" << ENDL;
+   10     cin >> number;
+   11     
+   12     const float res = factorial(number);
+   13     cout <<"The factorial is -> "<< res <<ENDL; 
+   14 }
+   15 
+   16 float factorial(const int number){
+   17     int i = 1; 
+   18     float res = 1.0;
+   19     for(; i <= number; i++ ) res = res * i;
+   20     return res;
+   21 }
+   22 
