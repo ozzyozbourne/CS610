@@ -1,7 +1,7 @@
 /* PROGRAM MatrixMultiplySequential */ 
 #include <stdlib.h>
 #include <math.h>
-#define n 10 
+#define n 10
 float A[n+1][n+1], B[n+1][n+1], C[n+1][n+1]; 
 int i, j; 
 

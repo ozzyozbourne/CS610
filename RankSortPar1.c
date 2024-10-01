@@ -1,13 +1,13 @@
 /* PROGRAM RankSortParallel */
-/* Figure 2.3 */
+/* Figure 2.3 */ 
 #include <stdlib.h>
-#define n 10 
+#define n 10
 int values[n+1], final[n+1];
 int i;
 
 void PutinPlace( int src ) {
   int testval, j, rank;
-
+ 
   testval = values[src];
   j = src;   /* j moves through the whole array */
   rank = 1;  /* position of the first number in the arrays */
@@ -20,10 +20,10 @@ void PutinPlace( int src ) {
   final[rank] = testval;  /*put into position*/
 }
 
-main() {
-  for (i = 1; i <= n; i++)
-    values[i] = rand() % 100; /* initialize values */
-    /*cin >> values[i]; */  /* if to initialize with input values */
+main() {  
+  for (i = 1; i <= n; i++) 
+    /* values[i] = rand() % 100; */   /* initialize values */
+    cin >> values[i];   /* if to initialize with input values */
   for (i = 1; i <= n; i++) {
     cout << values[i] << " ";
     if (i % 10 == 0) cout << endl;

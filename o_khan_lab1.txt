@@ -1,0 +1,600 @@
+ozzy@osaids-MacBook-Air cstar2.1 % ./cstar
+
+                          C* COMPILER AND
+                 PARALLEL COMPUTER SIMULATION SYSTEM
+                             (VER. 2.1)
+
+     (C) Copyright 2006 by Bruce P. Lester, All Rights Reserved
+
+
+  Basic Commands:
+    *OPEN filename - Open and Compile your program source file
+    *RUN - Initialize and run your program from the beginning
+    *CLOSE - Close your program source file to allow editing
+    *EXIT - Terminate this C* System
+    *HELP - Show a complete list of commands
+
+
+*open RankSorkPar1.c
+Cannot Open Your Program Source File
+
+
+*open RankSortPar1.c
+
+
+Program Successfully Compiled
+
+To View a Complete Program Listing, See File LISTFILE.TXT
+
+*run
+  82   25   33   63   50   11   53   61   81   31
+
+  11   25   31   33   50   53   61   63   81   82
+
+
+
+SEQUENTIAL EXECUTION TIME: 5600
+PARALLEL EXECUTION TIME: 1437
+SPEEDUP:    3.90
+NUMBER OF PROCESSORS USED: 11
+
+*close
+
+You can now modify your Program Source File
+
+
+*open RankSortPar1.c
+
+
+Program Successfully Compiled
+
+To View a Complete Program Listing, See File LISTFILE.TXT
+
+*close
+
+You can now modify your Program Source File
+
+
+*input = InputParallelRanksort_cin.txt
+
+*open RankSortPar1.c
+
+
+Program Successfully Compiled
+
+To View a Complete Program Listing, See File LISTFILE.TXT
+
+*run
+  19   94    2   23   47   35   16   67   75   57
+
+   2   16   19   23   35   47   57   67   75   94
+
+
+
+SEQUENTIAL EXECUTION TIME: 5550
+PARALLEL EXECUTION TIME: 1387
+SPEEDUP:    4.00
+NUMBER OF PROCESSORS USED: 11
+
+*display
+File for Program Data Input: InputParallelRanksort_cin.txt
+Listing File for your Source Program: LISTFILE.TXT
+
+*view
+   1 /* PROGRAM RankSortParallel */
+   2 /* Figure 2.3 */
+   3 #include <stdlib.h>
+   4 #define n 10
+   5 int values[n+1], final[n+1];
+   6 int i;
+   7
+   8 void PutinPlace( int src ) {
+   9   int testval, j, rank;
+  10
+  11   testval = values[src];
+  12   j = src;   /* j moves through the whole array */
+  13   rank = 1;  /* position of the first number in the arrays */
+  14   do {
+  15     j = j % n + 1; /* j moves to the next circular position */
+  16     if (testval > values[j] ||
+  17        (testval == values[j] && src > j))
+  18        rank = rank + 1;
+  19   } while (j != src);
+  20   final[rank] = testval;  /*put into position*/
+  21 }
+  22
+  23 main() {
+  24   for (i = 1; i <= n; i++)
+  25     /* values[i] = rand() % 100; */   /* initialize values */
+  26     cin >> values[i];   /* if to initialize with input values */
+  27   for (i = 1; i <= n; i++) {
+  28     cout << values[i] << " ";
+  29     if (i % 10 == 0) cout << endl;
+  30   }
+  31   cout << endl;
+  32   forall  i = 1 to n do
+  33     PutinPlace(i);  /* put values[i] in place */
+  34   for (i = 1; i <= n; i++) {
+  35     cout << final[i] << " ";
+  36     if (i % 10 == 0) cout << endl;
+  37   }
+  38   cout << endl;
+  39 }
+
+*view 23:39
+  23 main() {
+  24   for (i = 1; i <= n; i++)
+  25     /* values[i] = rand() % 100; */   /* initialize values */
+  26     cin >> values[i];   /* if to initialize with input values */
+  27   for (i = 1; i <= n; i++) {
+  28     cout << values[i] << " ";
+  29     if (i % 10 == 0) cout << endl;
+  30   }
+  31   cout << endl;
+  32   forall  i = 1 to n do
+  33     PutinPlace(i);  /* put values[i] in place */
+  34   for (i = 1; i <= n; i++) {
+  35     cout << final[i] << " ";
+  36     if (i % 10 == 0) cout << endl;
+  37   }
+  38   cout << endl;
+  39 }
+
+*break 33
+
+
+*display
+Breakpoints at Following Lines:
+33
+File for Program Data Input: InputParallelRanksort_cin.txt
+Listing File for your Source Program: LISTFILE.TXT
+
+*view break
+Error in Range
+
+*run
+  19   94    2   23   47   35   16   67   75   57
+
+
+Break At 33  In Function MAIN
+Process Number  0
+
+
+
+*status
+   PROCESS #   FUNCTION       LINE NUMBER  STATUS   PROCESSOR
+       0        MAIN               33      RUNNING      0
+
+*continue
+
+Break At 33  In Function MAIN
+Process Number  0
+
+
+
+*status
+   PROCESS #   FUNCTION       LINE NUMBER  STATUS   PROCESSOR
+       0        MAIN               33      RUNNING      0
+       1        MAIN               33      READY        1
+
+*c
+
+Break At 33  In Function MAIN
+Process Number  0
+
+
+
+*status
+   PROCESS #   FUNCTION       LINE NUMBER  STATUS   PROCESSOR
+       0        MAIN               33      RUNNING      0
+       1        PUTINPLACE         13      RUNNING      1
+       2        MAIN               33      READY        2
+
+*c
+
+Break At 33  In Function MAIN
+Process Number  0
+
+
+
+*status
+   PROCESS #   FUNCTION       LINE NUMBER  STATUS   PROCESSOR
+       0        MAIN               33      RUNNING      0
+       1        PUTINPLACE         15      RUNNING      1
+       2        PUTINPLACE         13      RUNNING      2
+       3        MAIN               33      READY        3
+
+*c
+
+Break At 33  In Function MAIN
+Process Number  0
+
+
+
+*status
+   PROCESS #   FUNCTION       LINE NUMBER  STATUS   PROCESSOR
+       0        MAIN               33      RUNNING      0
+       1        PUTINPLACE         17      RUNNING      1
+       2        PUTINPLACE         15      RUNNING      2
+       3        PUTINPLACE         12      RUNNING      3
+       4        MAIN               33      READY        4
+
+*c
+
+Break At 33  In Function MAIN
+Process Number  0
+
+
+
+*status
+   PROCESS #   FUNCTION       LINE NUMBER  STATUS   PROCESSOR
+       0        MAIN               33      RUNNING      0
+       1        PUTINPLACE         17      RUNNING      1
+       2        PUTINPLACE         16      RUNNING      2
+       3        PUTINPLACE         15      RUNNING      3
+       4        PUTINPLACE         12      RUNNING      4
+       5        MAIN               33      READY        5
+
+*c
+
+Break At 33  In Function MAIN
+Process Number  0
+
+
+
+*status
+   PROCESS #   FUNCTION       LINE NUMBER  STATUS   PROCESSOR
+       0        MAIN               33      RUNNING      0
+       1        PUTINPLACE         19      RUNNING      1
+       2        PUTINPLACE         17      RUNNING      2
+       3        PUTINPLACE         16      RUNNING      3
+       4        PUTINPLACE         15      RUNNING      4
+       5        PUTINPLACE         11      RUNNING      5
+       6        MAIN               33      READY        6
+
+*c
+
+Break At 33  In Function MAIN
+Process Number  0
+
+
+
+*status
+   PROCESS #   FUNCTION       LINE NUMBER  STATUS   PROCESSOR
+       0        MAIN               33      RUNNING      0
+       1        PUTINPLACE         16      RUNNING      1
+       2        PUTINPLACE         19      RUNNING      2
+       3        PUTINPLACE         19      RUNNING      3
+       4        PUTINPLACE         17      RUNNING      4
+       5        PUTINPLACE         16      RUNNING      5
+       6        PUTINPLACE         13      RUNNING      6
+       7        MAIN               33      READY        7
+
+*c
+
+Break At 33  In Function MAIN
+Process Number  0
+
+
+
+*status
+   PROCESS #   FUNCTION       LINE NUMBER  STATUS   PROCESSOR
+       0        MAIN               33      RUNNING      0
+       1        PUTINPLACE         17      RUNNING      1
+       2        PUTINPLACE         15      RUNNING      2
+       3        PUTINPLACE         15      RUNNING      3
+       4        PUTINPLACE         17      RUNNING      4
+       5        PUTINPLACE         17      RUNNING      5
+       6        PUTINPLACE         15      RUNNING      6
+       7        PUTINPLACE         13      RUNNING      7
+       8        MAIN               33      READY        8
+
+*c
+
+Break At 33  In Function MAIN
+Process Number  0
+
+
+
+*status
+   PROCESS #   FUNCTION       LINE NUMBER  STATUS   PROCESSOR
+       0        MAIN               33      RUNNING      0
+       1        PUTINPLACE         18      RUNNING      1
+       2        PUTINPLACE         17      RUNNING      2
+       3        PUTINPLACE         16      RUNNING      3
+       4        PUTINPLACE         15      RUNNING      4
+       5        PUTINPLACE         17      RUNNING      5
+       6        PUTINPLACE         17      RUNNING      6
+       7        PUTINPLACE         15      RUNNING      7
+       8        PUTINPLACE         12      RUNNING      8
+       9        MAIN               33      READY        9
+
+*c
+   2   16   19   23   35   47   57   67   75   94
+
+
+
+SEQUENTIAL EXECUTION TIME: 5550
+PARALLEL EXECUTION TIME: 1387
+SPEEDUP:    4.00
+NUMBER OF PROCESSORS USED: 11
+
+*status
+   PROCESS #   FUNCTION       LINE NUMBER  STATUS   PROCESSOR
+
+*display
+Breakpoints at Following Lines:
+33
+File for Program Data Input: InputParallelRanksort_cin.txt
+Listing File for your Source Program: LISTFILE.TXT
+
+*clear break
+From Line:33
+
+
+*display
+File for Program Data Input: InputParallelRanksort_cin.txt
+Listing File for your Source Program: LISTFILE.TXT
+
+*view
+   1 /* PROGRAM RankSortParallel */
+   2 /* Figure 2.3 */
+   3 #include <stdlib.h>
+   4 #define n 10
+   5 int values[n+1], final[n+1];
+   6 int i;
+   7
+   8 void PutinPlace( int src ) {
+   9   int testval, j, rank;
+  10
+  11   testval = values[src];
+  12   j = src;   /* j moves through the whole array */
+  13   rank = 1;  /* position of the first number in the arrays */
+  14   do {
+  15     j = j % n + 1; /* j moves to the next circular position */
+  16     if (testval > values[j] ||
+  17        (testval == values[j] && src > j))
+  18        rank = rank + 1;
+  19   } while (j != src);
+  20   final[rank] = testval;  /*put into position*/
+  21 }
+  22
+  23 main() {
+  24   for (i = 1; i <= n; i++)
+  25     /* values[i] = rand() % 100; */   /* initialize values */
+  26     cin >> values[i];   /* if to initialize with input values */
+  27   for (i = 1; i <= n; i++) {
+  28     cout << values[i] << " ";
+  29     if (i % 10 == 0) cout << endl;
+  30   }
+  31   cout << endl;
+  32   forall  i = 1 to n do
+  33     PutinPlace(i);  /* put values[i] in place */
+  34   for (i = 1; i <= n; i++) {
+  35     cout << final[i] << " ";
+  36     if (i % 10 == 0) cout << endl;
+  37   }
+  38   cout << endl;
+  39 }
+
+*view 8:21
+   8 void PutinPlace( int src ) {
+   9   int testval, j, rank;
+  10
+  11   testval = values[src];
+  12   j = src;   /* j moves through the whole array */
+  13   rank = 1;  /* position of the first number in the arrays */
+  14   do {
+  15     j = j % n + 1; /* j moves to the next circular position */
+  16     if (testval > values[j] ||
+  17        (testval == values[j] && src > j))
+  18        rank = rank + 1;
+  19   } while (j != src);
+  20   final[rank] = testval;  /*put into position*/
+  21 }
+
+*break 20
+
+
+*run
+  19   94    2   23   47   35   16   67   75   57
+
+
+Break At 20  In Function PUTINPLACE
+Process Number  1
+
+
+
+*status
+   PROCESS #   FUNCTION       LINE NUMBER  STATUS   PROCESSOR
+       0        MAIN               33      BLOCKED      0
+       1        PUTINPLACE         20      RUNNING      1
+       2        PUTINPLACE         17      RUNNING      2
+       3        PUTINPLACE         17      RUNNING      3
+       4        PUTINPLACE         18      RUNNING      4
+       5        PUTINPLACE         16      RUNNING      5
+       6        PUTINPLACE         15      RUNNING      6
+       7        PUTINPLACE         16      RUNNING      7
+       8        PUTINPLACE         16      RUNNING      8
+       9        PUTINPLACE         19      RUNNING      9
+      10        PUTINPLACE         17      RUNNING     10
+
+*write 0 final
+
+
+Index Range: 0:10
+    0--> 0
+    1--> 0
+    2--> 0
+    3--> 0
+    4--> 0
+    5--> 0
+    6--> 0
+    7--> 0
+    8--> 0
+    9--> 0
+   10--> 0
+
+*write 0 final
+
+
+Index Range:
+    0--> 0
+    1--> 0
+    2--> 0
+    3--> 0
+    4--> 0
+    5--> 0
+    6--> 0
+    7--> 0
+    8--> 0
+    9--> 0
+   10--> 0
+
+*step process 2
+
+
+*write 2 src
+
+
+2
+
+*step 1
+
+Break At 17  In Function PUTINPLACE
+Process Number  2
+Step Time is 0.  Process running 0 percent.
+
+
+
+*step 4
+
+Break At 15  In Function PUTINPLACE
+Process Number  2
+Step Time is 26.  Process running 100 percent.
+
+
+
+*step 5
+
+Break At 21  In Function PUTINPLACE
+Process Number  2
+Step Time is 47.  Process running 100 percent.
+
+
+
+*write 2 rank
+
+
+10
+
+*write 2 testval
+
+
+94
+
+*write 0 final
+
+
+Index Range:
+    0--> 0
+    1--> 2
+    2--> 0
+    3--> 19
+    4--> 23
+    5--> 0
+    6--> 0
+    7--> 0
+    8--> 0
+    9--> 0
+   10--> 94
+
+*status
+   PROCESS #   FUNCTION       LINE NUMBER  STATUS   PROCESSOR
+       0        MAIN               33      BLOCKED      0
+       2        PUTINPLACE         21      RUNNING      2
+       5        PUTINPLACE         19      RUNNING      5
+       6        PUTINPLACE         17      RUNNING      6
+       7        PUTINPLACE         20      RUNNING      7
+       8        PUTINPLACE         18      RUNNING      8
+       9        PUTINPLACE         16      RUNNING      9
+      10        PUTINPLACE         16      RUNNING     10
+
+*clear break
+From Line:20
+
+
+*step process 0
+
+
+*trace 0 final[9]
+
+
+
+
+*display
+
+List of Trace Variables:
+Variable Name             Memory Location
+   final[9]                     28
+File for Program Data Input: InputParallelRanksort_cin.txt
+Listing File for your Source Program: LISTFILE.TXT
+
+*c
+Reference to Trace Variable final[9]
+Line Number   20  In Function PUTINPLACE
+Process Number   9
+
+
+
+*write 9 src
+
+
+9
+
+*wire 9 testval
+INVALID COMMAND
+
+*write 9 testval
+
+
+75
+
+*write 0 final
+
+
+Index Range:
+    0--> 0
+    1--> 2
+    2--> 16
+    3--> 19
+    4--> 23
+    5--> 35
+    6--> 47
+    7--> 0
+    8--> 67
+    9--> 75
+   10--> 94
+
+*clear trace
+Memory Lc:28
+
+
+*clear trace
+Memory Lc:
+Memory Lc:10
+
+
+*display
+File for Program Data Input: InputParallelRanksort_cin.txt
+Listing File for your Source Program: LISTFILE.TXT
+
+*c
+   2   16   19   23   35   47   57   67   75   94
+
+
+
+SEQUENTIAL EXECUTION TIME: 5550
+PARALLEL EXECUTION TIME: 1387
+SPEEDUP:    4.00
+NUMBER OF PROCESSORS USED: 11
