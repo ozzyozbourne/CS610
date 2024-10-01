@@ -5,7 +5,7 @@ float factorial(int);
 main(void) {
     cout.precision(10);
     int number;  
-    
+     
     cout << "Enter a positive number to find factorial" << ENDL;
     cin >> number;
     
@@ -14,9 +14,9 @@ main(void) {
 }
 
 float factorial(const int number){
-    int i = 1; 
+    int i; 
     float res = 1.0;
-    for(; i <= number; i++ ) res = res * i;
-    return res;
+    for(i = 1; i <= number; i++ ) res = res * i;
+    return res; 
 }
 

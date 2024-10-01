@@ -11,7 +11,7 @@ float do_sqrt(float num_to_eval, int iteration_val) {
   cout << "Function do_sqrt Visit #" << iteration_val << ENDL;
   return sqrt(num_to_eval);
 }
-
+ 
 void print_stuff(float[] p, float[] q, int n) {
   int j;
   cout << ENDL <<"List#   Original   Square Root" << ENDL;
