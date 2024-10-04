@@ -98,20 +98,15 @@ read_image_values();
   /*  Your work - create the logic to process the image array_in
      Outer for loop is row counter.*/
 
-  for(i = 1; i <= image_rows; i++)
-     {
-       forall j = 1 to image_columns do
-       {
-          if( i==1 || i==image_rows || j==1 || j== image_columns)
-            {
-                image_out[i][j] = image_in[i][j];
-            }
-              else
-              {
+  for(i = 1; i <= image_rows; i++) {
+       forall j = 1 to image_columns do {
+         if ((i != 1) && (i != image_rows) && (j != 1) && (j != image_columns)){
                 image_out[i][j] = smooth_pixel(i, j);
-              }
-         }
-      }
+          } else {
+                image_out[i][j] = image_in[i][j];
+          }
+       }
+  }
 write_image_to_file();
 
 }

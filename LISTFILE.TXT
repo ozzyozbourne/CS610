@@ -98,20 +98,15 @@
    98   /*  Your work - create the logic to process the image array_in
    99      Outer for loop is row counter.*/
   100 
-  101   for(i = 1; i <= image_rows; i++)
-  102      {
-  103        forall j = 1 to image_columns do
-  104        {
-  105           if( i==1 || i==image_rows || j==1 || j== image_columns)
-  106             {
-  107                 image_out[i][j] = image_in[i][j];
-  108             }
-  109               else
-  110               {
-  111                 image_out[i][j] = smooth_pixel(i, j);
-  112               }
-  113          }
-  114       }
-  115 write_image_to_file();
-  116 
-  117 }
+  101   for(i = 1; i <= image_rows; i++) {
+  102        forall j = 1 to image_columns do {
+  103          if ((i != 1) && (i != image_rows) && (j != 1) && (j != image_columns)){
+  104                 image_out[i][j] = smooth_pixel(i, j);
+  105           } else {
+  106                 image_out[i][j] = image_in[i][j];
+  107           }
+  108        }
+  109   }
+  110 write_image_to_file();
+  111 
+  112 }
