@@ -1,7 +1,7 @@
 /* Parallel back substitutuin */
 /* for this we need a square matrix and a column matrix 
  * the A is the squre matrix and B is the column matrix */
-#define n 10
+#define n 4
 float A[n+1][n+1]; /*lower triangular matrix*/
 float B[n+1], x[n+1]; /*two arrays */
 float stream pipechan[n+2]; /* array of stream */
@@ -26,11 +26,17 @@ void PipeProcess(const int i){
     sum = 0;
     for (j = 1; j <= i-1; j++) {
         recv(pipechan[i], xvalue);  /*reading from the stream i into xvalue*/
-        send(pipechan[i+1], xvalue);/*writing to the stream i + 1 */          
+        if (i != n)
+            send(pipechan[i+1], xvalue);/*writing to the stream i + 1 */          
+        
         sum = sum + A[i][j] * xvalue;
     }
-    x[i] = (B[i] - sum) / A[i][i];  
-    send(pipechan[i+1], x[i]);
+
+    float res = (B[i] - sum) / A[i][i]; 
+    x[i] = res;
+    
+    if (i != n) 
+        send(pipechan[i+1],res);
 }
 
 main(void){
@@ -38,9 +44,27 @@ main(void){
     forall i = 1 to n do
         PipeProcess(i);
 
-    /* printing the ouput array x */
+
     for(i=1; i<=n;i++){
         cout.precision(3);
-        cout <<"x["<<i<<"  ] = "<<x[i] << endl;
+        cout <<"x["<<i<<"] = "<<x[i] << endl;
     }
+
+    float res = 0.0; 
+    
+    recv(pipechan[n + 1], res); /* this will dead lock */
+/*    
+    cout << res << ENDL;
+
+    recv(pipechan[n + 1], res);
+    cout << res << ENDL;
+
+        
+    recv(pipechan[n + 1], res);
+    cout << res << ENDL;
+
+    recv(pipechan[n + 1], res);
+    cout << res << ENDL;
+*/
+
 }
