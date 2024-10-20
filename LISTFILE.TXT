@@ -1,70 +1,58 @@
-    1 /* Parallel back substitutuin */
-    2 /* for this we need a square matrix and a column matrix 
-    3  * the A is the squre matrix and B is the column matrix */
-    4 #define n 4
-    5 float A[n+1][n+1]; /*lower triangular matrix*/
-    6 float B[n+1], x[n+1]; /*two arrays */
-    7 float stream pipechan[n+2]; /* array of stream */
-    8 int i;
-    9 
-   10 void initializeAB(void){
-   11     int row, col;
-   12     for(row = 1; row <= n; row++){
-   13         for(col = 1; col <= n; col++){
-   14             if (row == col){ A[row][col] = 5.0; } /* setting the diagonal to 5 */
-   15             else if (col < row) { A[row][col] = 1.0; } /*setting the all elements below diagonal to 1*/
-   16             else { A[row][col] = 0.0; } /* setting all elements above the diagonal to 0 since we are operating on lower triangular maxtrix */
-   17         }
-   18         B[row] = row; /* setting to column matrix to row value */
-   19     }
-   20 }
-   21 
-   22 void PipeProcess(const int i){
-   23     int j;
-   24     float sum, xvalue;
+    1 #include <stdlib.h>
+    2 
+    3 #define header_lines 4;
+    4 #define image_columns 120
+    5 #define image_rows 134
+    6 #define MaxGrayComponentValue 255;
+    7 #define carriage_return '\n'
+    8 
+    9 int image_in[image_rows+ 1][image_columns+ 1];
+   10 int hist[MaxGrayComponentValue + 1];
+   11 int stream streamlocks[MaxGrayComponentValue + 1]; /* array of stream */
+   12 
+   13 int i, j;
+   14 
+   15 void read_image_header(void){
+   16     char buffer[header_lines+1][80];
+   17     char c;
+   18     int m;
+   19     for (m = 1; m <= header_lines; ++m){
+   20         do{
+   21             cin >> c;  
+   22         } while (c != carriage_return);
+   23     }
+   24  }
    25 
-   26     sum = 0;
-   27     for (j = 1; j <= i-1; j++) {
-   28         recv(pipechan[i], xvalue);  /*reading from the stream i into xvalue*/
-   29         if (i != n)
-   30             send(pipechan[i+1], xvalue);/*writing to the stream i + 1 */          
-   31         
-   32         sum = sum + A[i][j] * xvalue;
-   33     }
-   34 
-   35     float res = (B[i] - sum) / A[i][i]; 
-   36     x[i] = res;
-   37     
-   38     if (i != n) 
-   39         send(pipechan[i+1],res);
-   40 }
-   41 
-   42 main(void){
-   43     initializeAB();
-   44     forall i = 1 to n do
-   45         PipeProcess(i);
+   26 void read_image_values(void){    
+   27     for(i = 1; i <= image_rows; i++){
+   28         for( j = 1; j <= image_columns; j++) { cin >> image_in[i][j]; }
+   29     }
+   30 }
+   31 
+   32 main(void){
+   33 
+   34     read_image_header();
+   35     read_image_values();
+   36 
+   37     for (i = 0; i <= MaxGrayComponentValue; i++){ hist[i] = 0; }
+   38 
+   39     forall i = 1 to image_rows do { 
+   40         int j, intensity;
+   41         forall j = 1 to image_columns do {
+   42             intensity = image_in[i][j];
+   43             send(streamlocks[intensity], intensity); 
+   44         }
+   45     }
    46 
    47 
-   48     for(i=1; i<=n;i++){
-   49         cout.precision(3);
-   50         cout <<"x["<<i<<"] = "<<x[i] << endl;
-   51     }
-   52 
-   53     float res = 0.0; 
-   54     
-   55     recv(pipechan[n + 1], res); /* this will dead lock */
-   56 /*    
-   57     cout << res << ENDL;
-   58 
-   59     recv(pipechan[n + 1], res);
-   60     cout << res << ENDL;
-   61 
-   62         
-   63     recv(pipechan[n + 1], res);
-   64     cout << res << ENDL;
-   65 
-   66     recv(pipechan[n + 1], res);
-   67     cout << res << ENDL;
-   68 */
-   69 
-   70 }
+   48     for (i = 0; i <= MaxGrayComponentValue; i++){ 
+   49         while(streamlocks[i]??){ 
+   50             int res;
+   51             recv(streamlocks[i], res);
+   52             hist[i] = hist[i] + 1;
+   53         }
+   54     }
+   55 
+   56     for (i = 0; i <= MaxGrayComponentValue; i++){ cout << "hist ["<<i<< "] = " << hist[i] << endl; } 
+   57 
+   58 }

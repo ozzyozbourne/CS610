@@ -3,12 +3,12 @@
 #define header_lines 4;
 #define image_columns 120
 #define image_rows 134
-#define  MaxGrayComponentValue 255;
+#define MaxGrayComponentValue 255;
 #define carriage_return '\n'
 
 int image_in[image_rows+ 1][image_columns+ 1];
 int hist[MaxGrayComponentValue + 1];
-spinlock L[MaxGrayComponentValue + 1];
+int stream streamlocks[MaxGrayComponentValue + 1]; /* array of stream */
 
 int i, j;
 
@@ -38,16 +38,21 @@ main(void){
 
     forall i = 1 to image_rows do { 
         int j, intensity;
-        for (j = 1; j <= image_columns; j++) {
+        forall j = 1 to image_columns do {
             intensity = image_in[i][j];
-            Lock(L[intensity]);
-            hist[intensity] = hist[intensity] + 1;  
-            Unlock(L[intensity]);
+            send(streamlocks[intensity], intensity); 
         }
     }
 
 
-    /* Printing the histogram */
-    for (i = 0; i <= MaxGrayComponentValue; i++){ cout << "hist ["<<i<< "] = " << hist[i] << endl; }
+    for (i = 0; i <= MaxGrayComponentValue; i++){ 
+        while(streamlocks[i]??){ 
+            int res;
+            recv(streamlocks[i], res);
+            hist[i] = hist[i] + 1;
+        }
+    }
+
+    for (i = 0; i <= MaxGrayComponentValue; i++){ cout << "hist ["<<i<< "] = " << hist[i] << endl; } 
 
 }
