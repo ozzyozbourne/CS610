@@ -40,12 +40,14 @@ main(void){
         int j, intensity;
         forall j = 1 to image_columns do {
             intensity = image_in[i][j];
+            /* fill the stream */
             send(streamlocks[intensity], intensity); 
         }
     }
 
 
     for (i = 0; i <= MaxGrayComponentValue; i++){ 
+        /* drain the stream */
         while(streamlocks[i]??){ 
             int res;
             recv(streamlocks[i], res);
