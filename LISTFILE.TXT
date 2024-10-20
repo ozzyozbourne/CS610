@@ -26,21 +26,45 @@
    26     sum = 0;
    27     for (j = 1; j <= i-1; j++) {
    28         recv(pipechan[i], xvalue);  /*reading from the stream i into xvalue*/
-   29         send(pipechan[i+1], xvalue);/*writing to the stream i + 1 */          
-   30         sum = sum + A[i][j] * xvalue;
-   31     }
-   32     x[i] = (B[i] - sum) / A[i][i];  
-   33     send(pipechan[i+1], x[i]);
-   34 }
-   35 
-   36 main(void){
-   37     initializeAB();
-   38     forall i = 1 to n do
-   39         PipeProcess(i);
-   40 
-   41     /* printing the ouput array x */
-   42     for(i=1; i<=n;i++){
-   43         cout.precision(3);
-   44         cout <<"x["<<i<<"  ] = "<<x[i] << endl;
-   45     }
-   46 }
+   29         if (i != n)
+   30             send(pipechan[i+1], xvalue);/*writing to the stream i + 1 */          
+   31         
+   32         sum = sum + A[i][j] * xvalue;
+   33     }
+   34 
+   35     float res = (B[i] - sum) / A[i][i]; 
+   36     x[i] = res;
+   37     
+   38     if (i != n) 
+   39         send(pipechan[i+1],res);
+   40 }
+   41 
+   42 main(void){
+   43     initializeAB();
+   44     forall i = 1 to n do
+   45         PipeProcess(i);
+   46 
+   47 
+   48     for(i=1; i<=n;i++){
+   49         cout.precision(3);
+   50         cout <<"x["<<i<<"] = "<<x[i] << endl;
+   51     }
+   52 
+   53     float res = 0.0; 
+   54     
+   55     recv(pipechan[n + 1], res); /* this will dead lock */
+   56 /*    
+   57     cout << res << ENDL;
+   58 
+   59     recv(pipechan[n + 1], res);
+   60     cout << res << ENDL;
+   61 
+   62         
+   63     recv(pipechan[n + 1], res);
+   64     cout << res << ENDL;
+   65 
+   66     recv(pipechan[n + 1], res);
+   67     cout << res << ENDL;
+   68 */
+   69 
+   70 }
